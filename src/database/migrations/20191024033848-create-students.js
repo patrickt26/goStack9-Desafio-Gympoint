@@ -22,9 +22,11 @@ module.exports = {
       },
       peso: {
         type: Sequelize.FLOAT,
+        allowNull: false,
       },
       altura: {
         type: Sequelize.FLOAT,
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,
