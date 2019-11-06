@@ -188,6 +188,28 @@ class EnrollmentController {
       end_date,
     });
   }
+
+  async delete(req, res) {
+    const user = await User.findOne({ where: { id: req.userId, admin: true } });
+
+    if (!user) {
+      return res.status(401).json({ error: 'Usuário sem privilégio' });
+    }
+
+    const enrollment = await Enrollment.findByPk(req.params.id);
+
+    if (!enrollment) {
+      return res.status(400).json({ error: 'Matrícula não existe' });
+    }
+
+    await enrollment.destroy({
+      where: { id: enrollment.id },
+    });
+
+    return res.json({
+      message: `Matrícula deletada com sucesso!`,
+    });
+  }
 }
 
 export default new EnrollmentController();
