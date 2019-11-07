@@ -1,6 +1,10 @@
 import * as Yup from 'yup';
 
 import HelpOrder from '../models/HelpOrders';
+import Student from '../models/Students';
+
+import HelpOrderAnswerMail from '../jobs/HelpOrderAnswerMail';
+import Queue from '../../lib/Queue';
 
 class HelpOrderController {
   async index(req, res) {
@@ -12,7 +16,15 @@ class HelpOrderController {
   }
 
   async update(req, res) {
-    const helpOrder = await HelpOrder.findByPk(req.params.id);
+    const helpOrder = await HelpOrder.findByPk(req.params.id, {
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['nome', 'email'],
+        },
+      ],
+    });
 
     if (!helpOrder) {
       return res.status(400).json({ error: 'Pedido de auxílio não existe' });
@@ -39,6 +51,12 @@ class HelpOrderController {
     } = await helpOrder.update({
       answer: req.body.answer,
       answer_at: new Date(),
+    });
+
+    await Queue.add(HelpOrderAnswerMail.key, {
+      helpOrder,
+      question,
+      answer,
     });
 
     return res.json({

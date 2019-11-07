@@ -6,6 +6,9 @@ import Student from '../models/Students';
 import Enrollment from '../models/Enrollments';
 import Plan from '../models/Plans';
 
+import Queue from '../../lib/Queue';
+import CreateEnrollmentMail from '../jobs/CreateEnrollmentMail';
+
 class EnrollmentController {
   async index(req, res) {
     const user = await User.findOne({ where: { id: req.userId, admin: true } });
@@ -99,16 +102,25 @@ class EnrollmentController {
         .json({ error: 'Datas antigas não são permitidas' });
     }
 
-    const { duration, price: pricePlan } = plan;
+    const { duration: durationPlan, price: pricePlan, title } = plan;
 
-    const endDate = addMonths(startDate, duration);
+    const endDate = addMonths(startDate, durationPlan);
 
     const { price, end_date } = await Enrollment.create({
       student_id,
       plan_id,
-      price: pricePlan * duration,
+      price: pricePlan * durationPlan,
       start_date: startDate,
       end_date: endDate,
+    });
+
+    await Queue.add(CreateEnrollmentMail.key, {
+      studentExists,
+      start_date,
+      title,
+      durationPlan,
+      end_date,
+      price,
     });
 
     return res.json({
