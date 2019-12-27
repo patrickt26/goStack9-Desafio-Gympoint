@@ -21,14 +21,14 @@ class EnrollmentController {
 
     const enrollments = await Enrollment.findAll({
       order: ['start_date', 'id'],
-      attributes: ['id', 'price', 'start_date', 'end_date'],
+      attributes: ['id', 'price', 'start_date', 'end_date', 'active'],
       limit: 5,
       offset: (page - 1) * 5,
       include: [
         {
           model: Student,
           as: 'student',
-          attributes: ['id', 'nome'],
+          attributes: ['id', 'name'],
         },
         {
           model: Plan,

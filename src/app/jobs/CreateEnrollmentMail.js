@@ -19,11 +19,11 @@ class CreateEnrollmentMail {
     } = data;
 
     await Mail.sendMail({
-      to: `${studentExists.nome} <${studentExists.email}>`,
+      to: `${studentExists.name} <${studentExists.email}>`,
       subject: 'Matrícula feita com sucesso',
       template: 'createEnrollment',
       context: {
-        student: studentExists.nome,
+        student: studentExists.name,
         dateStart: format(parseISO(start_date), "dd 'de' MMMM 'de' yyyy", {
           locale: pt,
         }),

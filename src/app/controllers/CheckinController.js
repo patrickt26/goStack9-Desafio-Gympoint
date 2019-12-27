@@ -47,7 +47,7 @@ class CheckinController {
       });
     }
 
-    const { nome } = student;
+    const { name } = student;
 
     const { id, student_id } = await Checkin.create({
       student_id: studentId,
@@ -56,7 +56,7 @@ class CheckinController {
     return res.json({
       id,
       student_id,
-      nome,
+      name,
     });
   }
 }

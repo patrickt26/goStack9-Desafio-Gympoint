@@ -4,7 +4,7 @@ import User from '../models/Users';
 class UserController {
   async store(req, res) {
     const schema = Yup.object().shape({
-      nome: Yup.string().required(),
+      name: Yup.string().required(),
       email: Yup.string()
         .email()
         .required(),
@@ -24,11 +24,11 @@ class UserController {
       return res.status(400).json({ error: 'Usuário já existe' });
     }
 
-    const { id, nome, email, admin } = await User.create(req.body);
+    const { id, name, email, admin } = await User.create(req.body);
 
     return res.json({
       id,
-      nome,
+      name,
       email,
       admin,
     });
@@ -36,7 +36,7 @@ class UserController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      nome: Yup.string(),
+      name: Yup.string(),
       email: Yup.string().email(),
       oldPassword: Yup.string().min(6),
       password: Yup.string()
@@ -70,11 +70,11 @@ class UserController {
       return res.status(401).json({ error: 'Password incorreto' });
     }
 
-    const { id, nome, admin } = await user.update(req.body);
+    const { id, name, admin } = await user.update(req.body);
 
     return res.json({
       id,
-      nome,
+      name,
       email,
       admin,
     });

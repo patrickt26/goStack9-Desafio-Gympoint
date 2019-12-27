@@ -3,6 +3,12 @@ import Student from '../models/Students';
 import User from '../models/Users';
 
 class StudentController {
+  async index(req, res) {
+    const students = await Student.findAll();
+
+    return res.json(students);
+  }
+
   async store(req, res) {
     const user = await User.findOne({ where: { id: req.userId, admin: true } });
 
@@ -11,13 +17,13 @@ class StudentController {
     }
 
     const schema = Yup.object().shape({
-      nome: Yup.string().required(),
+      name: Yup.string().required(),
       email: Yup.string()
         .email()
         .required(),
-      idade: Yup.number().required(),
-      peso: Yup.number().required(),
-      altura: Yup.number().required(),
+      year: Yup.number().required(),
+      weight: Yup.number().required(),
+      height: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -32,17 +38,17 @@ class StudentController {
       return res.status(400).json({ error: 'Estudante já cadastrado' });
     }
 
-    const { id, nome, email, idade, peso, altura } = await Student.create(
+    const { id, name, email, year, weight, height } = await Student.create(
       req.body
     );
 
     return res.json({
       id,
-      nome,
+      name,
       email,
-      idade,
-      peso,
-      altura,
+      year,
+      weight,
+      height,
     });
   }
 
@@ -54,11 +60,11 @@ class StudentController {
     }
 
     const schema = Yup.object().shape({
-      nome: Yup.string(),
+      name: Yup.string(),
       email: Yup.string().email(),
-      idade: Yup.number(),
-      peso: Yup.number(),
-      altura: Yup.number(),
+      year: Yup.number(),
+      weight: Yup.number(),
+      height: Yup.number(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -73,15 +79,17 @@ class StudentController {
       return res.status(404).json({ error: 'Estudante não existe' });
     }
 
-    const { nome, email, idade, peso, altura } = await student.update(req.body);
+    const { name, email, year, weight, height } = await student.update(
+      req.body
+    );
 
     return res.json({
       id,
-      nome,
+      name,
       email,
-      idade,
-      peso,
-      altura,
+      year,
+      weight,
+      height,
     });
   }
 }

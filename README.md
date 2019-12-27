@@ -1,4 +1,4 @@
-##Repositório destinado para resolução dos desafios do GoStack 9
+**Repositório destinado para resolução dos desafios do GoStack 9**
 
 <h1 align="center">
   <img alt="Gympoint" title="Gympoint" src="./src/util/image/logoGympoint.png" width="200px" />
